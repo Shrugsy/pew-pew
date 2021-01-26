@@ -19,6 +19,7 @@ function Bullet({ from, to }: BulletProps) {
 
   useEffect(() => {
     const audio = new Audio(laserSound);
+    audio.volume = 0.3;
     audio.play();
   }, []);
 
