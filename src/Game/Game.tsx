@@ -64,6 +64,7 @@ function Game() {
         onClick={measureClickPos}
         onMouseDown={() => setIsMouseHeld(true)}
         onMouseUp={() => setIsMouseHeld(false)}
+        onMouseLeave={() => setIsMouseHeld(false)}
       >
         <Layer>
           <StaticAssets />
