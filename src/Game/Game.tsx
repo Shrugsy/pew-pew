@@ -22,15 +22,26 @@ function Game() {
   const [clickedPos, setClickedPos] = useState<Vector2d | null>(null);
   const [isMouseHeld, setIsMouseHeld] = useState(false);
 
-  /**
-   * sync the cursor position to state
-   */
-  const handleMouseMove = useCallback(() => {
-    if (!stageRef.current) return;
-    const pos = stageRef.current.getPointerPosition();
-    if (!pos) return;
+  useEffect(() => {
+    let animFrameId: number;
+    function onAnimationFrame() {
+      if (stageRef.current) {
+        const pos = stageRef.current.getPointerPosition();
+        if (pos) {
+          // GAME LOOP LOGIC GOES HERE
+          // TODO: any logic in here that needs to be frame limited needs care taken
+          // should be based on 'time passed' rather than strictly 'per frame'
+          setCursorPos(pos);
+        }
+      }
+      animFrameId = requestAnimationFrame(onAnimationFrame);
+    }
 
-    setCursorPos(pos);
+    animFrameId = requestAnimationFrame(onAnimationFrame);
+
+    return () => {
+      cancelAnimationFrame(animFrameId);
+    };
   }, []);
 
   const measureClickPos = useCallback(() => {
@@ -60,7 +71,6 @@ function Game() {
         width={500}
         height={500}
         className={classes.game}
-        onMouseMove={handleMouseMove}
         onClick={measureClickPos}
         onMouseDown={() => setIsMouseHeld(true)}
         onMouseUp={() => setIsMouseHeld(false)}
